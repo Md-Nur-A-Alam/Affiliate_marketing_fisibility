@@ -33,6 +33,7 @@
 *{box-sizing:border-box;}
 html{scroll-behavior:smooth;}
 @media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto;} *{animation:none!important; transition:none!important;} }
+html,body{height:100%; overflow:hidden;}
 body{
   margin:0; background:var(--bg); color:var(--ink);
   font-family:var(--sans); font-size:16px; line-height:1.65;
@@ -59,13 +60,24 @@ button{font-family:var(--sans); cursor:pointer;}
   color:var(--ink); font-size:1rem; display:flex; align-items:center; justify-content:center;
 }
 #navctl button:hover{border-color:var(--blue); color:var(--blue);}
+#navctl button:disabled{opacity:0.3; pointer-events:none;}
+#navctl .hint{font-family:var(--mono); font-size:0.6rem; color:var(--ink-soft); text-align:center; margin-top:2px;}
 
-/* ---------- deck / slides ---------- */
-.deck{scroll-snap-type:y proximity;}
+/* ---------- deck / slides (horizontal, left-right) ---------- */
+.deck{
+  display:flex; flex-direction:row; flex-wrap:nowrap;
+  height:100vh; height:100dvh; width:100vw;
+  overflow-x:auto; overflow-y:hidden;
+  scroll-snap-type:x mandatory;
+  scrollbar-width:none;
+}
+.deck::-webkit-scrollbar{display:none;}
 .slide{
-  min-height:100vh; scroll-snap-align:start; position:relative;
-  display:flex; flex-direction:column; justify-content:center;
-  padding:90px 0 70px; border-top:1px solid var(--line);
+  flex:0 0 100vw; width:100vw; height:100vh; height:100dvh;
+  scroll-snap-align:start; scroll-snap-stop:always; position:relative;
+  display:flex; flex-direction:column; justify-content:flex-start;
+  padding:90px 0 70px; border-left:1px solid var(--line);
+  overflow-y:auto; overflow-x:hidden;
 }
 .slide.alt{background:var(--bg-alt);}
 .slide .idx{
@@ -81,7 +93,7 @@ button{font-family:var(--sans); cursor:pointer;}
 .teaser .arrow{color:var(--blue); font-family:var(--mono);}
 
 /* ---------- hero ---------- */
-#hero{padding-top:70px; overflow:hidden;}
+#hero{padding-top:70px; overflow-x:hidden; justify-content:center;}
 #hero-bg{position:absolute; inset:0; opacity:0.5; pointer-events:none;}
 #hero-bg svg{width:100%; height:100%;}
 #hero .hookline{font-size:0.95rem; color:var(--ink-soft); margin-bottom:10px;}
@@ -267,8 +279,9 @@ select, input[type=number]{font-family:var(--sans); font-size:0.9rem; padding:7p
   </div>
 </div>
 <div id="navctl">
-  <button id="btn-prev" aria-label="আগের স্লাইড">↑</button>
-  <button id="btn-next" aria-label="পরের স্লাইড">↓</button>
+  <button id="btn-prev" aria-label="আগের স্লাইড (← / ↑)">←</button>
+  <button id="btn-next" aria-label="পরের স্লাইড (→ / ↓)">→</button>
+  <div class="hint">← → / ↑ ↓</div>
 </div>
 
 <div class="deck">
@@ -287,7 +300,7 @@ select, input[type=number]{font-family:var(--sans); font-size:0.9rem; padding:7p
     <p class="sub">নাকি আমরা শুধু একটা Hype দেখছি?</p>
     <div class="tagline">Research · Data · Economics · Experiment</div>
     <span class="badge">Interactive Bangladesh Case Study — ২৫টি স্লাইড, নিজের হিসাব সহ</span><br>
-    <a href="#s-question" class="cta">শুরু করুন ↓</a>
+    <a href="#s-question" class="cta">শুরু করুন →</a>
   </div>
 </section>
 
@@ -299,7 +312,7 @@ select, input[type=number]{font-family:var(--sans); font-size:0.9rem; padding:7p
     <h2>বাংলাদেশে Affiliate Marketing কি সত্যিই একটি viable earning model, নাকি hype?</h2>
     <p class="lede">আমরা YES বা NO — কোনোটাই আগে থেকে ধরে নিচ্ছি না। এই পুরো experience-এর কাজ হলো evidence দিয়ে উত্তরটা খুঁজে বের করা — এবং শেষে আপনি নিজের numbers দিয়ে সিদ্ধান্ত নেবেন।</p>
     <div class="callout blue">এই ওয়েবসাইট আপনাকে affiliate marketer হতে বলছে না। এটা আপনাকে evidence দেখাচ্ছে, এবং আপনার নিজের numbers দিয়ে model test করার সুযোগ দিচ্ছে।</div>
-    <div class="teaser"><span class="arrow">↓</span> প্রথমে জানা দরকার — Affiliate Marketing আসলে কীভাবে কাজ করে</div>
+    <div class="teaser"><span class="arrow">→</span> প্রথমে জানা দরকার — Affiliate Marketing আসলে কীভাবে কাজ করে</div>
   </div>
 </section>
 
@@ -311,7 +324,7 @@ select, input[type=number]{font-family:var(--sans); font-size:0.9rem; padding:7p
     <h2>Affiliate Marketing আসলে কী?</h2>
     <p class="lede">একটি সহজ mechanism: আপনি একটি product-এর জন্য একটি ইউনিক লিংক শেয়ার করেন। কেউ ক্লিক করে কিনলে, প্ল্যাটফর্ম আপনাকে একটি নির্দিষ্ট commission দেয়।</p>
     <p>আপনি stock রাখেন না, delivery করেন না, customer service দেন না — আপনি শুধু <em>traffic-কে purchase-এ রূপান্তর করার</em> চেষ্টা করেন। সংজ্ঞাটুকু সহজ। কিন্তু বাস্তবে এটা কাজ করে কিনা তা নির্ভর করে audience, trust, infrastructure আর economics-এর সম্মিলিত ফলাফলের উপর।</p>
-    <div class="teaser"><span class="arrow">↓</span> তাহলে দেখা যাক — বাংলাদেশের ডিজিটাল ভিত্তি আসলে কতটা শক্ত</div>
+    <div class="teaser"><span class="arrow">→</span> তাহলে দেখা যাক — বাংলাদেশের ডিজিটাল ভিত্তি আসলে কতটা শক্ত</div>
   </div>
 </section>
 
@@ -342,8 +355,21 @@ select, input[type=number]{font-family:var(--sans); font-size:0.9rem; padding:7p
         </dl></details>
       </div>
     </div>
+    <div style="display:flex; align-items:center; gap:24px; flex-wrap:wrap; margin:18px 0;">
+      <svg viewBox="0 0 200 200" width="150" height="150" style="flex-shrink:0;" role="img" aria-label="৪৭% জনসংখ্যা অনলাইনে, ৫৩% অফলাইনে">
+        <circle cx="100" cy="100" r="70" fill="none" stroke="var(--panel-2)" stroke-width="24"/>
+        <circle cx="100" cy="100" r="70" fill="none" stroke="var(--blue)" stroke-width="24"
+          stroke-dasharray="206.7 439.8" stroke-linecap="butt" transform="rotate(-90 100 100)"/>
+        <text x="100" y="94" text-anchor="middle" font-family="var(--mono)" font-size="30" font-weight="700" fill="var(--ink)">৪৭%</text>
+        <text x="100" y="118" text-anchor="middle" font-family="var(--sans)" font-size="12" fill="var(--ink-soft)">অনলাইনে</text>
+      </svg>
+      <div style="font-size:0.85rem; color:var(--ink-soft); min-width:160px;">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;"><span style="width:12px;height:12px;border-radius:2px;background:var(--blue); display:inline-block;"></span> অনলাইন — ৮২.৮ মিলিয়ন (৪৭.০%)</div>
+        <div style="display:flex; align-items:center; gap:8px;"><span style="width:12px;height:12px;border-radius:2px;background:var(--panel-2); display:inline-block;"></span> অফলাইন — ৯৩.৪ মিলিয়ন+ (৫৩.০%)</div>
+      </div>
+    </div>
     <div class="callout amber">৫৩.০% জনসংখ্যা এখনো অফলাইন। "৮২.৮ মিলিয়ন সম্ভাব্য customer" ভাবার আগে এই সংখ্যাটা মাথায় রাখুন।</div>
-    <div class="teaser"><span class="arrow">↓</span> Social media-তে ছবিটা আরও জটিল</div>
+    <div class="teaser"><span class="arrow">→</span> Social media-তে ছবিটা আরও জটিল</div>
   </div>
 </section>
 
@@ -372,8 +398,14 @@ select, input[type=number]{font-family:var(--sans); font-size:0.9rem; padding:7p
         </dl></details>
       </div>
     </div>
+    <div class="niche-list" style="margin:20px 0;" role="img" aria-label="প্ল্যাটফর্ম অনুযায়ী বিজ্ঞাপন-reach তুলনা">
+      <div class="niche-row"><div class="niche-name">Facebook</div><div class="niche-bar-wrap"><div class="niche-bar" style="width:100%; background:var(--blue);"></div></div><div class="niche-score num">৬৪.০ মি.</div></div>
+      <div class="niche-row"><div class="niche-name">TikTok (১৮+)</div><div class="niche-bar-wrap"><div class="niche-bar" style="width:87.8%; background:var(--green);"></div></div><div class="niche-score num">৫৬.২ মি.</div></div>
+      <div class="niche-row"><div class="niche-name">YouTube</div><div class="niche-bar-wrap"><div class="niche-bar" style="width:77.8%; background:var(--amber);"></div></div><div class="niche-score num">৪৯.৮ মি.</div></div>
+    </div>
+    <p class="control-note" style="margin-top:-8px;">উপরের তিনটি bar — ad reach (অক্টোবর ২০২৫), monthly active user নয়।</p>
     <div class="callout">Ad reach আর active user এক জিনিস না। Affiliate marketing-এর জন্য যেটা আসলে গুরুত্বপূর্ণ তা হলো — এই মানুষগুলো <em>কেনার সিদ্ধান্ত</em> কোথায় নেয়, শুধু কোথায় স্ক্রল করে তা নয়।</div>
-    <div class="teaser"><span class="arrow">↓</span> কিন্তু কেনার জন্য টাকা পাঠানোও তো লাগে</div>
+    <div class="teaser"><span class="arrow">→</span> কিন্তু কেনার জন্য টাকা পাঠানোও তো লাগে</div>
   </div>
 </section>
 
@@ -385,9 +417,26 @@ select, input[type=number]{font-family:var(--sans); font-size:0.9rem; padding:7p
     <h2>ডিজিটাল পেমেন্ট বাড়ছে — কিন্তু Cash এখনো রাজত্ব করে</h2>
     <p class="lede">বাংলাদেশ ব্যাংকের Payment Systems Report 2025 অনুযায়ী, ডিজিটাল লেনদেনের পরিমাণ ২০২৪-এ ৪৮২.৭ কোটি থেকে বেড়ে ২০২৫-এ ৫৪৬.৩ কোটিতে পৌঁছেছে — উভয় ক্ষেত্রেই <span class="tag tag-fact" style="margin-left:2px;">+১৩%</span>।</p>
     <p>MFS accounts (bKash, Nagad, Rocket) জানুয়ারি ২০২৫-এ ২৩৯.৩ মিলিয়নে পৌঁছেছে, মাসিক merchant payment ৳৮৬ বিলিয়ন ছাড়িয়েছে।</p>
+    <div style="display:flex; align-items:center; gap:24px; flex-wrap:wrap; margin:18px 0;">
+      <svg viewBox="0 0 200 200" width="150" height="150" style="flex-shrink:0;" role="img" aria-label="৬৫.৪১% cash-based, ৩৪.৫৯% digital লেনদেন">
+        <circle cx="100" cy="100" r="70" fill="none" stroke="var(--green)" stroke-width="24"/>
+        <circle cx="100" cy="100" r="70" fill="none" stroke="var(--red)" stroke-width="24"
+          stroke-dasharray="287.7 439.8" stroke-linecap="butt" transform="rotate(-90 100 100)"/>
+        <text x="100" y="94" text-anchor="middle" font-family="var(--mono)" font-size="26" font-weight="700" fill="var(--ink)">৬৫.৪%</text>
+        <text x="100" y="118" text-anchor="middle" font-family="var(--sans)" font-size="11" fill="var(--ink-soft)">Cash-based</text>
+      </svg>
+      <div style="font-size:0.85rem; color:var(--ink-soft); min-width:160px;">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;"><span style="width:12px;height:12px;border-radius:2px;background:var(--red); display:inline-block;"></span> Cash-based — ৬৫.৪১%</div>
+        <div style="display:flex; align-items:center; gap:8px;"><span style="width:12px;height:12px;border-radius:2px;background:var(--green); display:inline-block;"></span> Digital — ৩৪.৫৯%</div>
+      </div>
+    </div>
+    <div class="funnel" style="margin:14px 0 22px;">
+      <div class="funnel-row"><div class="funnel-label">২০২৪ digital txn</div><div class="funnel-bar-wrap"><div class="funnel-bar" style="width:88%; background:var(--ink-soft);"></div></div><div class="funnel-value">৪৮২.৭ কোটি</div></div>
+      <div class="funnel-row"><div class="funnel-label">২০২৫ digital txn</div><div class="funnel-bar-wrap"><div class="funnel-bar" style="width:100%; background:var(--green);"></div></div><div class="funnel-value">৫৪৬.৩ কোটি (+১৩%)</div></div>
+    </div>
     <div class="callout red">কিন্তু <span class="tag tag-interpretation" style="margin:0;">INTERPRETATION</span> — অক্টোবর ২০২৫-এর তথ্য অনুযায়ী মোট লেনদেনের মূল্যের <strong>৬৫.৪১%</strong> এখনো cash-based। ডিজিটাল পেমেন্ট অবকাঠামো friction কমায়, কিন্তু নিজে থেকে purchase intent তৈরি করে না।</div>
     <p class="control-note">Source: Bangladesh Bank, Payment Systems Report 2025 (The Daily Star, thefinancialexpress.com.bd, New Age রিপোর্টিং)</p>
-    <div class="teaser"><span class="arrow">↓</span> এখন প্রশ্ন হলো — মানুষ কেন কেনে, কেন কেনে না</div>
+    <div class="teaser"><span class="arrow">→</span> এখন প্রশ্ন হলো — মানুষ কেন কেনে, কেন কেনে না</div>
   </div>
 </section>
 
@@ -411,7 +460,7 @@ select, input[type=number]{font-family:var(--sans); font-size:0.9rem; padding:7p
       </dl></details>
     </div>
     <div class="callout green" style="margin-top:18px;">Trust একটি decorative variable নয় — এটি conversion environment-এর প্রকৃত অংশ।</div>
-    <div class="teaser"><span class="arrow">↓</span> তার মানে audience থাকা আর buyer থাকা এক জিনিস না</div>
+    <div class="teaser"><span class="arrow">→</span> তার মানে audience থাকা আর buyer থাকা এক জিনিস না</div>
   </div>
 </section>
 
@@ -423,7 +472,50 @@ select, input[type=number]{font-family:var(--sans); font-size:0.9rem; padding:7p
     <h2>Audience ≠ Buyer</h2>
     <p class="lede" style="font-size:1.15rem; max-width:44ch;">৮২.৮ মিলিয়ন মানুষ অনলাইনে থাকা মানে এই না যে তারা একটি অচেনা affiliate লিংক থেকে কিছু কিনবে।</p>
     <p>Reach আছে। Payment infrastructure আছে। কিন্তু কেনার সিদ্ধান্ত নির্ভর করে trust, purchase intent, আর content-এর quality-র উপর — যা কোনো জাতীয় পরিসংখ্যান দিয়ে মাপা যায় না।</p>
-    <div class="teaser"><span class="arrow">↓</span> তাহলে আসল টাকাটা কীভাবে তৈরি হয়, ধাপে ধাপে দেখা যাক</div>
+    <div style="display:flex; flex-wrap:wrap; gap:9px; max-width:360px; margin:20px 0;" role="img" aria-label="৪০ জনের মধ্যে একজন প্রতীকী ক্রেতা">
+      <span style="width:13px;height:13px;border-radius:50%;background:var(--panel-2);display:inline-block;"></span>
+      <span style="width:13px;height:13px;border-radius:50%;background:var(--panel-2);display:inline-block;"></span>
+      <span style="width:13px;height:13px;border-radius:50%;background:var(--panel-2);display:inline-block;"></span>
+      <span style="width:13px;height:13px;border-radius:50%;background:var(--panel-2);display:inline-block;"></span>
+      <span style="width:13px;height:13px;border-radius:50%;background:var(--panel-2);display:inline-block;"></span>
+      <span style="width:13px;height:13px;border-radius:50%;background:var(--panel-2);display:inline-block;"></span>
+      <span style="width:13px;height:13px;border-radius:50%;background:var(--panel-2);display:inline-block;"></span>
+      <span style="width:13px;height:13px;border-radius:50%;background:var(--panel-2);display:inline-block;"></span>
+      <span style="width:13px;height:13px;border-radius:50%;background:var(--panel-2);display:inline-block;"></span>
+      <span style="width:13px;height:13px;border-radius:50%;background:var(--panel-2);display:inline-block;"></span>
+      <span style="width:13px;height:13px;border-radius:50%;background:var(--panel-2);display:inline-block;"></span>
+      <span style="width:13px;height:13px;border-radius:50%;background:var(--panel-2);display:inline-block;"></span>
+      <span style="width:13px;height:13px;border-radius:50%;background:var(--panel-2);display:inline-block;"></span>
+      <span style="width:13px;height:13px;border-radius:50%;background:var(--panel-2);display:inline-block;"></span>
+      <span style="width:13px;height:13px;border-radius:50%;background:var(--panel-2);display:inline-block;"></span>
+      <span style="width:13px;height:13px;border-radius:50%;background:var(--panel-2);display:inline-block;"></span>
+      <span style="width:13px;height:13px;border-radius:50%;background:var(--panel-2);display:inline-block;"></span>
+      <span style="width:13px;height:13px;border-radius:50%;background:var(--panel-2);display:inline-block;"></span>
+      <span style="width:13px;height:13px;border-radius:50%;background:var(--panel-2);display:inline-block;"></span>
+      <span style="width:13px;height:13px;border-radius:50%;background:var(--panel-2);display:inline-block;"></span>
+      <span style="width:13px;height:13px;border-radius:50%;background:var(--panel-2);display:inline-block;"></span>
+      <span style="width:13px;height:13px;border-radius:50%;background:var(--panel-2);display:inline-block;"></span>
+      <span style="width:13px;height:13px;border-radius:50%;background:var(--panel-2);display:inline-block;"></span>
+      <span style="width:13px;height:13px;border-radius:50%;background:var(--panel-2);display:inline-block;"></span>
+      <span style="width:13px;height:13px;border-radius:50%;background:var(--panel-2);display:inline-block;"></span>
+      <span style="width:13px;height:13px;border-radius:50%;background:var(--panel-2);display:inline-block;"></span>
+      <span style="width:13px;height:13px;border-radius:50%;background:var(--panel-2);display:inline-block;"></span>
+      <span style="width:13px;height:13px;border-radius:50%;background:var(--panel-2);display:inline-block;"></span>
+      <span style="width:13px;height:13px;border-radius:50%;background:var(--panel-2);display:inline-block;"></span>
+      <span style="width:13px;height:13px;border-radius:50%;background:var(--panel-2);display:inline-block;"></span>
+      <span style="width:13px;height:13px;border-radius:50%;background:var(--panel-2);display:inline-block;"></span>
+      <span style="width:13px;height:13px;border-radius:50%;background:var(--panel-2);display:inline-block;"></span>
+      <span style="width:13px;height:13px;border-radius:50%;background:var(--panel-2);display:inline-block;"></span>
+      <span style="width:13px;height:13px;border-radius:50%;background:var(--panel-2);display:inline-block;"></span>
+      <span style="width:13px;height:13px;border-radius:50%;background:var(--panel-2);display:inline-block;"></span>
+      <span style="width:13px;height:13px;border-radius:50%;background:var(--panel-2);display:inline-block;"></span>
+      <span style="width:13px;height:13px;border-radius:50%;background:var(--panel-2);display:inline-block;"></span>
+      <span style="width:13px;height:13px;border-radius:50%;background:var(--panel-2);display:inline-block;"></span>
+      <span style="width:13px;height:13px;border-radius:50%;background:var(--panel-2);display:inline-block;"></span>
+      <span style="width:13px;height:13px;border-radius:50%;background:var(--green);display:inline-block;box-shadow:0 0 0 3px var(--green-soft);"></span>
+    </div>
+    <p class="control-note" style="margin-top:-6px;">Illustrative ratio — প্রকৃত conversion rate niche, content quality আর trust অনুযায়ী অনেক কম-বেশি হতে পারে (দেখুন স্লাইড ০৯-এর funnel)।</p>
+    <div class="teaser"><span class="arrow">→</span> তাহলে আসল টাকাটা কীভাবে তৈরি হয়, ধাপে ধাপে দেখা যাক</div>
   </div>
 </section>
 
@@ -443,7 +535,7 @@ select, input[type=number]{font-family:var(--sans); font-size:0.9rem; padding:7p
       <div class="funnel-row"><div class="funnel-label">Commission ৫%</div><div class="funnel-bar-wrap"><div class="funnel-bar" style="width:0.5%"></div></div><div class="funnel-value">৳৩,৩৭৫</div></div>
     </div>
     <div class="callout amber">CTR ২%, CVR ২.৫%, Cancellation ১০%, Attribution loss ৫% — এগুলো <span class="tag tag-assumption" style="margin:0;">Scenario Assumption</span>, বাংলাদেশের observed statistic নয়।</div>
-    <div class="teaser"><span class="arrow">↓</span> এই পুরো ধাপগুলো একটাই সূত্রে বাঁধা</div>
+    <div class="teaser"><span class="arrow">→</span> এই পুরো ধাপগুলো একটাই সূত্রে বাঁধা</div>
   </div>
 </section>
 
@@ -458,8 +550,21 @@ select, input[type=number]{font-family:var(--sans); font-size:0.9rem; padding:7p
     &nbsp;&nbsp;<span class="op">×</span> (1 <span class="op">−</span> Cancellation) <span class="op">×</span> (1 <span class="op">−</span> Attribution Loss)<br>
     &nbsp;&nbsp;<span class="op">×</span> AOV <span class="op">×</span> Commission<br>
     &nbsp;&nbsp;<span class="op2">− Costs</span></div>
+    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin:20px 0; font-family:var(--mono); font-size:0.76rem;" role="img" aria-label="Views গুণ CTR গুণ CVR গুণ AOV গুণ Commission সমান Revenue">
+      <div style="border:1px solid var(--line-strong); border-radius:4px; padding:9px 12px; background:var(--panel); color:var(--ink-soft);">Views</div>
+      <span style="color:var(--ink-soft);">×</span>
+      <div style="border:1px solid var(--line-strong); border-radius:4px; padding:9px 12px; background:var(--panel); color:var(--ink-soft);">CTR</div>
+      <span style="color:var(--ink-soft);">×</span>
+      <div style="border:1px solid var(--line-strong); border-radius:4px; padding:9px 12px; background:var(--panel); color:var(--ink-soft);">CVR</div>
+      <span style="color:var(--ink-soft);">×</span>
+      <div style="border:1px solid var(--line-strong); border-radius:4px; padding:9px 12px; background:var(--panel); color:var(--ink-soft);">AOV</div>
+      <span style="color:var(--ink-soft);">×</span>
+      <div style="border:1px solid var(--blue); border-radius:4px; padding:9px 12px; background:var(--blue-soft); color:var(--blue);">Commission</div>
+      <span style="color:var(--ink-soft);">=</span>
+      <div style="border:1px solid var(--green); border-radius:4px; padding:9px 12px; background:var(--green-soft); color:var(--green); font-weight:700;">Revenue</div>
+    </div>
     <p>এই সূত্রটি গুণফল-ভিত্তিক (multiplicative)। তাই CTR বা CVR-এ ছোট একটি improvement পুরো ফলাফলে বড় প্রভাব ফেলতে পারে।</p>
-    <div class="teaser"><span class="arrow">↓</span> চলুন এবার সংখ্যা বাদ দিয়ে — আপনার নিজের হিসাব করি</div>
+    <div class="teaser"><span class="arrow">→</span> চলুন এবার সংখ্যা বাদ দিয়ে — আপনার নিজের হিসাব করি</div>
   </div>
 </section>
 
@@ -519,7 +624,7 @@ select, input[type=number]{font-family:var(--sans); font-size:0.9rem; padding:7p
       <div class="reset-row"><button id="btn-reset">Reset assumptions</button><button id="btn-example">Use realistic example</button></div>
       <p id="sim-feedback" class="control-note" style="min-height:1.2em;"></p>
     </div>
-    <div class="teaser"><span class="arrow">↓</span> এখন একটা income target বেছে নিন</div>
+    <div class="teaser"><span class="arrow">→</span> এখন একটা income target বেছে নিন</div>
   </div>
 </section>
 
@@ -548,7 +653,7 @@ select, input[type=number]{font-family:var(--sans); font-size:0.9rem; padding:7p
       </div>
       <p id="rev-output" style="font-size:0.92rem;"></p>
     </div>
-    <div class="teaser"><span class="arrow">↓</span> ছোট improvement কতটা বড় পার্থক্য তৈরি করে দেখুন</div>
+    <div class="teaser"><span class="arrow">→</span> ছোট improvement কতটা বড় পার্থক্য তৈরি করে দেখুন</div>
   </div>
 </section>
 
@@ -565,7 +670,7 @@ select, input[type=number]{font-family:var(--sans); font-size:0.9rem; padding:7p
       <div class="sens-card"><div class="sens-title">Commission বাড়লে Revenue</div><div class="sens-bars" id="sens-comm"></div><div class="sens-xlabels" id="sens-comm-x"></div></div>
     </div>
     <div class="callout">CTR বা CVR-এ ছোট improvement revenue-কে dramatically বাড়িয়ে দিতে পারে — কারণ পুরো সূত্রটাই গুণফল-ভিত্তিক।</div>
-    <div class="teaser"><span class="arrow">↓</span> এখন একটা বাস্তব range দেখা যাক, একক সংখ্যা নয়</div>
+    <div class="teaser"><span class="arrow">→</span> এখন একটা বাস্তব range দেখা যাক, একক সংখ্যা নয়</div>
   </div>
 </section>
 
@@ -583,7 +688,7 @@ select, input[type=number]{font-family:var(--sans); font-size:0.9rem; padding:7p
       <div class="rbox"><div class="rlbl">Strong execution (P75)</div><div class="rval num" id="mc-p75">—</div></div>
     </div>
     <p class="control-note">Illustrative probability model, আপনার নিজের assumptions-এর উপর ভিত্তি করে — historical বাংলাদেশ affiliate data নয়।</p>
-    <div class="teaser"><span class="arrow">↓</span> সব niche কি সমান? দেখা যাক</div>
+    <div class="teaser"><span class="arrow">→</span> সব niche কি সমান? দেখা যাক</div>
   </div>
 </section>
 
@@ -601,7 +706,7 @@ select, input[type=number]{font-family:var(--sans); font-size:0.9rem; padding:7p
       <div class="control"><div class="control-head"><label for="w-ease">Content সহজতা</label><span class="cv num" id="wv-ease">৫</span></div><input type="range" id="w-ease" min="0" max="10" value="5"></div>
     </div>
     <div class="niche-list" id="niche-list"></div>
-    <div class="teaser"><span class="arrow">↓</span> এবার সংখ্যা রেখে — কেন বেশিরভাগ মানুষ ব্যর্থ হয় দেখা যাক</div>
+    <div class="teaser"><span class="arrow">→</span> এবার সংখ্যা রেখে — কেন বেশিরভাগ মানুষ ব্যর্থ হয় দেখা যাক</div>
   </div>
 </section>
 
@@ -624,7 +729,7 @@ select, input[type=number]{font-family:var(--sans); font-size:0.9rem; padding:7p
       <li>Experiment না করা</li>
       <li>খুব তাড়াতাড়ি থেমে যাওয়া</li>
     </ol>
-    <div class="teaser"><span class="arrow">↓</span> Theory যথেষ্ট নয় — ৭ দিনে যাচাই করুন</div>
+    <div class="teaser"><span class="arrow">→</span> Theory যথেষ্ট নয় — ৭ দিনে যাচাই করুন</div>
   </div>
 </section>
 
@@ -643,7 +748,7 @@ select, input[type=number]{font-family:var(--sans); font-size:0.9rem; padding:7p
       <li>৭ দিন পর CTR হিসাব করে simulator-এ বসিয়ে দেখুন</li>
     </ul>
     <div class="callout amber">লক্ষ্য: assumption যাচাই করা, ভাইরাল হওয়া নয়। ৭ দিনে CTR model-এর ধারেকাছে না এলে — Theory বদলান, hope করবেন না।</div>
-    <div class="teaser"><span class="arrow">↓</span> এখন প্রশ্নটা আপনার দিকে — আপনি কতটা ready?</div>
+    <div class="teaser"><span class="arrow">→</span> এখন প্রশ্নটা আপনার দিকে — আপনি কতটা ready?</div>
   </div>
 </section>
 
@@ -672,7 +777,7 @@ select, input[type=number]{font-family:var(--sans); font-size:0.9rem; padding:7p
       <p><strong>সবচেয়ে বড় weakness:</strong> <span id="readiness-weakness">—</span></p>
       <p id="readiness-rec" style="margin-top:8px;"></p>
     </div>
-    <div class="teaser"><span class="arrow">↓</span> একটা শেষ প্রশ্ন — mindset নিয়ে</div>
+    <div class="teaser"><span class="arrow">→</span> একটা শেষ প্রশ্ন — mindset নিয়ে</div>
   </div>
 </section>
 
@@ -690,7 +795,7 @@ select, input[type=number]{font-family:var(--sans); font-size:0.9rem; padding:7p
       <button class="opt-btn" data-m="unsure">Not sure</button>
     </div>
     <p id="mindset-response" style="font-size:0.92rem; margin-top:14px;"></p>
-    <div class="teaser"><span class="arrow">↓</span> এবার Hype আর Reality-র মধ্যে পার্থক্যটা দেখুন</div>
+    <div class="teaser"><span class="arrow">→</span> এবার Hype আর Reality-র মধ্যে পার্থক্যটা দেখুন</div>
   </div>
 </section>
 
@@ -708,7 +813,7 @@ select, input[type=number]{font-family:var(--sans); font-size:0.9rem; padding:7p
       <div class="hr-col" id="hr-reality"><h4>REALITY যা বলে</h4>
         <ul><li>Audience building</li><li>Content production</li><li>Trust অর্জন</li><li>Measurement ও tracking</li><li>Conversion optimization</li><li>Experimentation</li><li>ধৈর্য</li></ul></div>
     </div>
-    <div class="teaser"><span class="arrow">↓</span> সবকিছু মিলিয়ে বাংলাদেশ কতটা ready?</div>
+    <div class="teaser"><span class="arrow">→</span> সবকিছু মিলিয়ে বাংলাদেশ কতটা ready?</div>
   </div>
 </section>
 
@@ -728,7 +833,7 @@ select, input[type=number]{font-family:var(--sans); font-size:0.9rem; padding:7p
       <div class="idx-row"><div class="idx-label">Creator/Affiliate Ecosystem</div><div class="idx-bar-wrap"><div class="idx-bar" style="width:55%"></div></div><div class="idx-val">৫.৫/১০</div></div>
     </div>
     <p class="control-note">Overall average ≈ ৫.৫/১০ — "Niche-ready" পরিসরে (৫.০–৭.৫)।</p>
-    <div class="teaser"><span class="arrow">↓</span> এবার সবকিছু একসাথে — চূড়ান্ত verdict</div>
+    <div class="teaser"><span class="arrow">→</span> এবার সবকিছু একসাথে — চূড়ান্ত verdict</div>
   </div>
 </section>
 
@@ -748,7 +853,7 @@ select, input[type=number]{font-family:var(--sans); font-size:0.9rem; padding:7p
       <div class="verdict-cell"><div class="vlbl">Biggest Bottleneck</div><div class="vval" id="v-bottleneck">—</div></div>
       <div class="verdict-cell"><div class="vlbl">Next Experiment</div><div class="vval" id="v-next" style="font-size:0.86rem;">Comparison content বনাম direct recommendation টেস্ট করুন</div></div>
     </div>
-    <div class="teaser"><span class="arrow">↓</span> এখন আপনার পালা</div>
+    <div class="teaser"><span class="arrow">→</span> এখন আপনার পালা</div>
   </div>
 </section>
 
@@ -767,7 +872,7 @@ select, input[type=number]{font-family:var(--sans); font-size:0.9rem; padding:7p
     <div id="verdict-response" class="callout"></div>
     <button class="copybtn" id="btn-copy">আমার Affiliate Model কপি করুন</button>
     <p id="copy-confirm" class="control-note"></p>
-    <div class="teaser"><span class="arrow">↓</span> সবশেষে — কোথা থেকে এই তথ্য এলো</div>
+    <div class="teaser"><span class="arrow">→</span> সবশেষে — কোথা থেকে এই তথ্য এলো</div>
   </div>
 </section>
 
@@ -822,14 +927,24 @@ select, input[type=number]{font-family:var(--sans); font-size:0.9rem; padding:7p
   }
   function goTo(i){
     i = Math.max(0, Math.min(total-1, i));
-    slides[i].scrollIntoView({behavior: reduceMotion?'auto':'smooth'});
+    slides[i].scrollIntoView({behavior: reduceMotion?'auto':'smooth', inline:'start', block:'nearest'});
   }
   $('btn-next').addEventListener('click', ()=>goTo(currentIndex+1));
   $('btn-prev').addEventListener('click', ()=>goTo(currentIndex-1));
   window.addEventListener('keydown', (e)=>{
-    if(['ArrowDown','PageDown'].includes(e.key)){ e.preventDefault(); goTo(currentIndex+1); }
-    else if(['ArrowUp','PageUp'].includes(e.key)){ e.preventDefault(); goTo(currentIndex-1); }
+    /* Slides move left/right. Up/Down keys also work as slide-to-slide nav,
+       but only when the user isn't actively using a form control (range
+       sliders etc. need their own Left/Right/Up/Down behaviour). */
+    const activeTag = (document.activeElement && document.activeElement.tagName) || '';
+    const inFormControl = ['INPUT','SELECT','TEXTAREA'].includes(activeTag);
+    if(inFormControl) return;
+    if(['ArrowRight','ArrowDown','PageDown'].includes(e.key)){ e.preventDefault(); goTo(currentIndex+1); }
+    else if(['ArrowLeft','ArrowUp','PageUp'].includes(e.key)){ e.preventDefault(); goTo(currentIndex-1); }
   });
+  const ctaStart = document.querySelector('a.cta[href="#s-question"]');
+  if(ctaStart){
+    ctaStart.addEventListener('click', (e)=>{ e.preventDefault(); goTo(slides.indexOf(document.getElementById('s-question'))); });
+  }
 
   /* ---------- hero hook: count-up ---------- */
   (function(){
